@@ -15,3 +15,4 @@ colnames(data) <- c("TimeStamp","Age","Gender","Living_area","Vac_safe","Vac_sta
 library(dplyr)
 data$Living_area <- as.numeric(as.factor(data$Living_area))
 data$Living_area
+hello
