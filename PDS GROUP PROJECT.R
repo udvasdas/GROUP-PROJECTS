@@ -58,12 +58,40 @@ data$Vac_symptom <- as.numeric (as.factor(data$Vac_symptom))
 
 ## Bar and pie diagram of age composition of the data
 tab <- table(data$Age)
-df <- data.frame(Age=unique(data$Age),count=c(1,96,4,7))
+df <- data.frame(Age=unique(data$Age),count=c(96,4,1,7))
 bar <- ggplot(data=df,aes(y=count,x=Age),beside=T)+geom_bar(stat="identity",width = 0.5)+
   labs(title="Age composition",x="Age Intervals",y="Frequency")
 bar
 
 bar1 <- ggplot(data=df,aes(y=count,x="",fill=Age))+geom_bar(stat="identity",width = 0.5)+
   labs(title="Age composition",x="Age Intervals",y="Frequency")
+pie <- bar1 + coord_polar("y",start=0)
+pie + geom_text(label=paste(df$count),position=position_stack(vjust = 0.5))
+
+
+##pie diagram for gender composition of the data
+table (data$Gender)
+df1 <- data.frame(Gender=unique(data$Gender),count=c(37,71))
+bar1 <- ggplot (df1, aes(y= count,x= "", fill=Gender))+geom_bar(stat = "identity", width = 0.5)+
+  labs(title = "Gender Composition", x= "Gender", y= "frequency")
+pie<- bar1+ coord_polar("y", start = 0)
+pie + geom_text(label=paste(df1$count),position=position_stack(vjust = 0.5))
+
+
+##Bar and pie diagram of to categorise the living area of the data
+table(data$Living_area)
+df <- data.frame(Living=unique(data$Living_area),count=c(63,31,14))
+bar <- ggplot(data=df,aes(y=count,x=Living),beside=T)+geom_bar(stat="identity",width = .75)+
+  labs(title="Living area",x="Factor",y="Count")+
+  annotate("text", x=1.25, y=60, label= "'1' Represent Metroplitan area.",size=3.5)+
+  annotate("text", x=1.13, y=57, label= "'2' Represent Rural area.",size=3.5)+
+  annotate("text", x=1.15, y=54, label= "'3' Represent Small Town.",size=3.5)
+bar
+
+bar1 <- ggplot(data=df,aes(y=count,x="",fill= Living))+geom_bar(stat="identity",width = 0.5)+
+  labs(title="Pie diagram to show Living area in the data
+  '1' Represent Metroplitan area.
+  '2' Represent Rural area.
+  '3' Represent Small Town.",y="Frequency")
 pie <- bar1 + coord_polar("y",start=0)
 pie + geom_text(label=paste(df$count),position=position_stack(vjust = 0.5))
