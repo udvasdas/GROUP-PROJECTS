@@ -1,4 +1,3 @@
-
 ## CALLING THE DATA
 
 rm(list=ls())
@@ -57,41 +56,99 @@ data$Vac_symptom <- as.numeric (as.factor(data$Vac_symptom))
 ## 1. Age, 2. Gender, 3. Living_area, 4. Living_area wrt Gender and Age using multiple bar chart , 5. Gender based on different age interval using multiple bar chart
 
 ## Bar and pie diagram of age composition of the data
-tab <- table(data$Age)
-df <- data.frame(Age=unique(data$Age),count=c(96,4,1,7))
-bar <- ggplot(data=df,aes(y=count,x=Age),beside=T)+geom_bar(stat="identity",width = 0.5)+
+df <- data.frame(table(data$Age))
+bar <- ggplot(data=df,aes(y=Freq,x=Var1),beside=T)+geom_bar(stat="identity",width = 0.5)+
   labs(title="Age composition",x="Age Intervals",y="Frequency")
 bar
 
-bar1 <- ggplot(data=df,aes(y=count,x="",fill=Age))+geom_bar(stat="identity",width = 0.5)+
+bar1 <- ggplot(data=df,aes(y=Freq,x="",fill=Var1))+geom_bar(stat="identity",width = 0.5)+
   labs(title="Age composition",x="Age Intervals",y="Frequency")
 pie <- bar1 + coord_polar("y",start=0)
-pie + geom_text(label=paste(df$count),position=position_stack(vjust = 0.5))
+pie + geom_text(label=paste(df$Freq),position=position_stack(vjust = 0.5))
 
 
 ##pie diagram for gender composition of the data
-table (data$Gender)
-df1 <- data.frame(Gender=unique(data$Gender),count=c(37,71))
-bar1 <- ggplot (df1, aes(y= count,x= "", fill=Gender))+geom_bar(stat = "identity", width = 0.5)+
-  labs(title = "Gender Composition", x= "Gender", y= "frequency")
+df1 <- data.frame(table(data$Gender))
+bar1 <- ggplot (df1, aes(y = Freq,x = "", fill= Var1))+geom_bar(stat = "identity", width = 0.5)+
+  labs(title = "Gender Composition", x= "Gender", y= "Frequency")
 pie<- bar1+ coord_polar("y", start = 0)
-pie + geom_text(label=paste(df1$count),position=position_stack(vjust = 0.5))
+pie + geom_text(label=paste(df1$Freq),position=position_stack(vjust = 0.5))
 
 
-##Bar and pie diagram of to categorise the living area of the data
+##Bar and pie diagram of to categorize the living area of the data
 table(data$Living_area)
 df <- data.frame(Living=unique(data$Living_area),count=c(63,31,14))
 bar <- ggplot(data=df,aes(y=count,x=Living),beside=T)+geom_bar(stat="identity",width = .75)+
   labs(title="Living area",x="Factor",y="Count")+
-  annotate("text", x=1.25, y=60, label= "'1' Represent Metroplitan area.",size=3.5)+
-  annotate("text", x=1.13, y=57, label= "'2' Represent Rural area.",size=3.5)+
-  annotate("text", x=1.15, y=54, label= "'3' Represent Small Town.",size=3.5)
+  annotate("text", x=1.19, y=60, label= "'1' Represents Metroplitan area.",size=3.5)+
+  annotate("text", x=1.11, y=57, label= "'2' Represents Rural area.",size=3.5)+
+  annotate("text", x=1.13, y=54, label= "'3' Represents Small Town.",size=3.5)
 bar
 
 bar1 <- ggplot(data=df,aes(y=count,x="",fill= Living))+geom_bar(stat="identity",width = 0.5)+
   labs(title="Pie diagram to show Living area in the data
-  '1' Represent Metroplitan area.
-  '2' Represent Rural area.
-  '3' Represent Small Town.",y="Frequency")
+  '1' Represents Metroplitan area.
+  '2' Represents Rural area.
+  '3' Represents Small Town.",y="Frequency")
 pie <- bar1 + coord_polar("y",start=0)
 pie + geom_text(label=paste(df$count),position=position_stack(vjust = 0.5))
+
+
+
+##Living_area wrt Gender and Age using multiple bar chart 
+names(data)
+df <-data%>%
+  group_by(Living_area,Gender,Age)
+df$Age  
+
+df1 <- df[df$Age=="18-25",]
+df2 <- df1[df1$Gender=="Male",]
+tab1 <- data.frame(table(df2$Living_area))
+count1 <- nrow(tab1)
+df3 <- df1[df1$Gender=="Female",]
+tab2 <- data.frame(table(df3$Living_area))
+count2 <- nrow(tab2)
+
+df1 <- df[df$Age=="26-35",]
+df2 <- df1[df1$Gender=="Male",]
+tab3 <- data.frame(table(df2$Living_area))
+count3 <- nrow(tab3)
+df3 <- df1[df1$Gender=="Female",]
+tab4 <- data.frame(table(df3$Living_area))
+count4 <- nrow(tab4)
+
+df1 <- df[df$Age=="36-45",]
+df2 <- df1[df1$Gender=="Male",]
+tab5 <- data.frame(table(df2$Living_area))
+count5 <- nrow(tab5)
+df3 <- df1[df1$Gender=="Female",]
+tab6 <- data.frame(table(df3$Living_area))
+count6 <- nrow(tab6)
+
+df1 <- df[df$Age=="45 above",]
+df2 <- df1[df1$Gender=="Male",]
+tab7 <- data.frame(table(df2$Living_area))
+count7 <- nrow(tab7)
+df3 <- df1[df1$Gender=="Female",]
+tab8 <- data.frame(table(df3$Living_area))
+count8 <- nrow(tab8)
+
+df1 <- df[df$Age=="0-17",]
+df2 <- df1[df1$Gender=="Male",]
+tab9 <- data.frame(table(df2$Living_area))
+count9 <- nrow(tab9)
+df3 <- df1[df1$Gender=="Female",]
+tab10 <- data.frame(table(df3$Living_area))
+count10 <- nrow(tab10)
+
+bar_data <- data.frame(Age =c(rep("18-25",6),rep("26-35",4),rep("36-45",4),rep("45 above",3),rep("0-17",1)),Living_area=c(tab1$Var1,tab2$Var1,tab3$Var1,tab4$Var1,tab5$Var1,tab6$Var1,tab7$Var1,tab8$Var1,tab9$Var1,tab10$Var1),
+                       Gender=c(rep("Male",count1),rep("Female",count2),rep("Male",count3),rep("Female",count4),rep("Male",count5),rep("Female",count6),rep("Male",count7),rep("Female",count8),rep("Male",count9),rep("Female",count10)),
+                       value=c(tab1$Freq,tab2$Freq,tab3$Freq,tab4$Freq,tab5$Freq,tab6$Freq,tab7$Freq,tab8$Freq,tab10$Freq)) 
+
+bar_data
+ggplot(data=bar_data,aes(x=Age,fill=Living_area,y=value))+geom_bar(position="dodge",stat="identity",size=0.8)+facet_wrap(~Gender)+
+  labs(y="Count",x="Age intervals",title="Gender wise Living_area data",
+       subtitle="Age interval wise
+1 denotes Metropolitan cities
+2 denotes Rural area
+3 denotes Small towns")
