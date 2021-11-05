@@ -53,7 +53,7 @@ data$Vac_symptom <- as.numeric (as.factor(data$Vac_symptom))
 ## 4 represents "No, I did not face any".
 
 ## Looking at the data Demographically ____ Plots we need to do initially___
-## 1. Age, 2. Gender, 3. Living_area, 4. Living_area wrt Gender and Age using multiple bar chart , 5. Gender based on different age interval using multiple bar chart
+## 1. Age, 2. Gender, 3. Living_area, 4. Gender based on different age interval using multiple bar chart, 5. Living_area wrt Gender and Age using multiple bar chart 
 
 ## Bar and pie diagram of age composition of the data
 df <- data.frame(table(data$Age))
@@ -75,6 +75,8 @@ pie<- bar1+ coord_polar("y", start = 0)
 pie + geom_text(label=paste(df1$Freq),position=position_stack(vjust = 0.5))
 
 
+
+
 ##Bar and pie diagram of to categorize the living area of the data
 table(data$Living_area)
 df <- data.frame(Living=unique(data$Living_area),count=c(63,31,14))
@@ -93,13 +95,29 @@ bar1 <- ggplot(data=df,aes(y=count,x="",fill= Living))+geom_bar(stat="identity",
 pie <- bar1 + coord_polar("y",start=0)
 pie + geom_text(label=paste(df$count),position=position_stack(vjust = 0.5))
 
+##Gender based on different age interval using multiple bar chart
 
-
-##Living_area wrt Gender and Age using multiple bar chart 
-names(data)
 df <-data%>%
   group_by(Living_area,Gender,Age)
 df$Age  
+count <- c(count1 <- nrow(df[df$Age=="18-25" & df$Gender=="Male",]),
+           count2 <- nrow(df[df$Age=="18-25" & df$Gender=="Female",]),
+           count3 <- nrow(df[df$Age=="26-35" & df$Gender=="Male",]),
+           count4 <- nrow(df[df$Age=="26-35" & df$Gender=="Female",]), 
+           count5 <- nrow(df[df$Age=="36-45" & df$Gender=="Male",]),
+           count6 <- nrow(df[df$Age=="36-45" & df$Gender=="Female",]),
+           count7 <- nrow(df[df$Age=="45 above" & df$Gender=="Male",]),
+           count8 <- nrow(df[df$Age=="45 above" & df$Gender=="Female",]),
+           count9 <- nrow(df[df$Age=="0-17" & df$Gender=="Male",]),
+           count10 <- nrow(df[df$Age=="0-17" & df$Gender=="Female",]))
+
+df_gen <- data.frame(Age=c(rep("18-25",2),rep("26-35",2),rep("36-45",2),rep("45 above",2),rep("0-17",2)),
+                     Gender = rep(c("Male","Female"),5),Count = count)
+ggplot(data=df_gen,aes(x=Age,fill=Gender,y=Count))+geom_bar(position="dodge",stat="identity",size=0.8)+
+  labs(y="Count",x="Age intervals",title="Dissection of the data in Age intervals",subtitle="Gender wise")
+
+
+##Living_area wrt Gender and Age using multiple bar chart 
 
 df1 <- df[df$Age=="18-25",]
 df2 <- df1[df1$Gender=="Male",]
