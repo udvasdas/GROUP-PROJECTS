@@ -155,6 +155,55 @@ ggplot(data=bar_data,aes(x=Age,fill=Living_area,y=value))+
 2 denotes Rural area
 3 denotes Small towns")
 
+
+
+## EXPLORATORY DATA ANALYSIS
+## 1.Vaccination safe wrt age
+age_count <- data %>% 
+  group_by(Age) %>% 
+  summarise(count=n())
+age_count
+age_safe <- data %>% 
+  group_by(Age,Vac_safe) %>%
+  summarise(count=n())
+age_safe
+age_safe$tot_count <- rep(rep(age_count$count,times=c(1,3,2,2,2)))  
+age_safe$freq_den <- age_safe$count/age_safe$tot_count
+age_safe <- age_safe[-1,]
+ggplot(data=age_safe,aes(x=Age,y=freq_den,fill=as.factor(Vac_safe)),beside=TRUE)+geom_bar(position="dodge",stat="identity")+
+  labs(title="Vaccination reliability age wise",subtitle="  1 represents No, it can affect my health 
+  2 represents Not Sure 
+  3 is Yes",x="Age intervals",y="Frequency density")
+
+## 2. Vaccination safe wrt living area
+
+living_count <- df%>%
+  group_by(Living_area) %>% 
+  summarise(count=n())
+living_safe <- df %>% 
+  group_by(Living_area,Vac_safe) %>% 
+  summarise(count=n())  
+living_safe$count_tot <- rep(living_count$count,times=c(3,1,3))  
+living_safe$freq_den <- living_safe$count/living_safe$count_tot
+ggplot(data=living_safe,aes(x=as.factor(Living_area),y=freq_den,fill=as.factor(Vac_safe)))+
+  geom_bar(position="dodge",stat="identity",width = 0.3)+
+  labs(title="Vaccination reliability",x="Living areas",y="Frequency density",subtitle="Living area wise")+
+  theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0))+coord_flip()
+
+## 3. Vaccination safe wrt Gender
+gen_count <- df %>%
+  group_by(Gender) %>% 
+  summarise(count=n())
+gen_safe <- df %>% 
+  group_by(Gender,Vac_safe) %>% 
+  summarise(count=n())
+gen_safe
+gen_safe$count_tot <- rep(gen_count$count,times=c(3,3))  
+gen_safe$freq_den <- gen_safe$count/gen_safe$count_tot
+ggplot(data=gen_safe,aes(x=as.factor(Gender),y=freq_den,fill=as.factor(Vac_safe)))+
+  geom_bar(position="dodge",stat="identity",width=0.3)+
+  labs(title="Vaccination reliability",x="Gender",y="Frequency density",subtitle="Gender wise")+
+  coord_flip()
 #4. FREQUENCY-WISE analysis wrt to Age, Vaccination status and gender.
 agestatus <- data.frame(data$Age, data$Vac_status, data$Gender)
 tabage <- data.frame(table (agestatus))
