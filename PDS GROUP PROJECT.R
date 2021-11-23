@@ -155,7 +155,7 @@ ggplot(data=bar_data,aes(x=Age,fill=Living_area,y=value))+
 2 denotes Rural area
 3 denotes Small towns")
 
-#FREQUENCY-WISE analysis wrt to Age, Vaccination status and gender.
+#4. FREQUENCY-WISE analysis wrt to Age, Vaccination status and gender.
 agestatus <- data.frame(data$Age, data$Vac_status, data$Gender)
 tabage <- data.frame(table (agestatus))
 colnames(tabage)<- c("Age","Vaccination_Status","Gender","Number")
@@ -188,7 +188,7 @@ ggplot(data=agestatus_gender,aes(x= Age,y= freq,fill= Vaccination_Status))+
 2 denotes Both dose is taken
 3 denotes Not Vaccinated")
 
-
+#5. relationship between vaccination status and living area of the indivisual.
 data2 <- df
 living <- data2 %>% 
   group_by(Living_area,Vac_status) %>% 
