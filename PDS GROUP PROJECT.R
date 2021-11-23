@@ -79,21 +79,22 @@ pie + geom_text(label=paste(df1$Freq),position=position_stack(vjust = 0.5))
 
 ##Bar and pie diagram of to categorize the living area of the data
 table(data$Living_area)
-df <- data.frame(Living=unique(data$Living_area),count=c(63,31,14))
-bar <- ggplot(data=df,aes(y=count,x=Living),beside=T)+geom_bar(stat="identity",width = .75)+
+df2 <- data.frame(table(data$Living_area))
+bar <- ggplot(data=df2,aes(y= Freq,x= Var1),beside=T)+geom_bar(stat="identity",width = .75)+
   labs(title="Living area",x="Factor",y="Count")+
   annotate("text", x=1.19, y=60, label= "'1' Represents Metroplitan area.",size=3.5)+
   annotate("text", x=1.11, y=57, label= "'2' Represents Rural area.",size=3.5)+
   annotate("text", x=1.13, y=54, label= "'3' Represents Small Town.",size=3.5)
 bar
 
-bar1 <- ggplot(data=df,aes(y=count,x="",fill= Living))+geom_bar(stat="identity",width = 0.5)+
+bar1 <- ggplot(data=df2,aes(y=Freq ,x="",fill= Var1))+geom_bar(stat="identity",width = 0.5)+
   labs(title="Pie diagram to show Living area in the data
   '1' Represents Metroplitan area.
   '2' Represents Rural area.
   '3' Represents Small Town.",y="Frequency")
 pie <- bar1 + coord_polar("y",start=0)
-pie + geom_text(label=paste(df$count),position=position_stack(vjust = 0.5))
+pie + geom_text(label=paste(df2$Freq),position=position_stack(vjust = 0.5))
+
 
 ##Gender based on different age interval using multiple bar chart
 
