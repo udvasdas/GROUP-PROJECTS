@@ -1,8 +1,8 @@
 ## CALLING THE DATA
 
 rm(list=ls())
-data <- read.csv(file = "D:/RKMVERI MSc BDA/PDS project/Vaccination.csv",header = TRUE)
-head(data)
+df <- read.csv(file = "Vaccination.csv",header = TRUE)
+head(df)
 
 ## CALLING THE LIBRARIES
 library(dplyr)
@@ -11,13 +11,14 @@ library(ggplot2)
 ##PREPARING THE DATA TO ANALYZE
 ## Columns to be modified--- Living area, Vac_safe, Vac_status, Vac_reliable, CoWin, Vac_symptom   
 ## Changing the column names to something short for future use.
-colnames(data) <- c("TimeStamp","Age","Gender","Living_area","Vac_safe","Vac_status","Travel","1st_choice",
+colnames(df) <- c("TimeStamp","Age","Gender","Living_area","Vac_safe","Vac_status","Travel","1st_choice",
                     "2nd_choice","3rd_choice","4th_choice","5th_choice","6th_choice","Vac_brand",
                     "Vac_reliable","CoWin","Vac_app_easy","waiting_time","Social_dis","Hygiene",
                     "Vac_symptom","Govt_effort")
 
+data <- df
 data$Living_area <- as.numeric(as.factor(data$Living_area))
-data$Living_area
+table (data$Living_area) 
 ##here we are using to represent the entire column "Living_area" as a factor of (1,2,3)
 ## 1 represents Metropolitan city
 ## 2 represents Rural area 
@@ -53,12 +54,12 @@ data$Vac_symptom <- as.numeric (as.factor(data$Vac_symptom))
 ## 4 represents "No, I did not face any".
 
 ## Looking at the data Demographically ____ Plots we need to do initially___
-## 1. Age, 2. Gender, 3. Living_area, 4. Gender based on different age interval using multiple bar chart, 5. Living_area wrt Gender and Age using multiple bar chart 
+## 1. Age, 2. Gender, 3. Living_area, 4. Living_area wrt Gender and Age using multiple bar chart , 5. Gender based on different age interval using multiple bar chart
 
 ## Bar and pie diagram of age composition of the data
 df <- data.frame(table(data$Age))
 bar <- ggplot(data=df,aes(y=Freq,x=Var1),beside=T)+geom_bar(stat="identity",width = 0.5)+
-  labs(title="Age composition",x="Age Intervals",y="Frequency")
+  labs(title="Age composition",x="Age Intervals",y="Frequency")+ylim(0,110)
 bar
 
 bar1 <- ggplot(data=df,aes(y=Freq,x="",fill=Var1))+geom_bar(stat="identity",width = 0.5)+
@@ -73,8 +74,6 @@ bar1 <- ggplot (df1, aes(y = Freq,x = "", fill= Var1))+geom_bar(stat = "identity
   labs(title = "Gender Composition", x= "Gender", y= "Frequency")
 pie<- bar1+ coord_polar("y", start = 0)
 pie + geom_text(label=paste(df1$Freq),position=position_stack(vjust = 0.5))
-
-
 
 
 ##Bar and pie diagram of to categorize the living area of the data
@@ -96,29 +95,12 @@ pie <- bar1 + coord_polar("y",start=0)
 pie + geom_text(label=paste(df2$Freq),position=position_stack(vjust = 0.5))
 
 
-##Gender based on different age interval using multiple bar chart
 
+##Living_area wrt Gender and Age using multiple bar chart 
+names(data)
 df <-data%>%
   group_by(Living_area,Gender,Age)
 df$Age  
-count <- c(count1 <- nrow(df[df$Age=="18-25" & df$Gender=="Male",]),
-           count2 <- nrow(df[df$Age=="18-25" & df$Gender=="Female",]),
-           count3 <- nrow(df[df$Age=="26-35" & df$Gender=="Male",]),
-           count4 <- nrow(df[df$Age=="26-35" & df$Gender=="Female",]), 
-           count5 <- nrow(df[df$Age=="36-45" & df$Gender=="Male",]),
-           count6 <- nrow(df[df$Age=="36-45" & df$Gender=="Female",]),
-           count7 <- nrow(df[df$Age=="45 above" & df$Gender=="Male",]),
-           count8 <- nrow(df[df$Age=="45 above" & df$Gender=="Female",]),
-           count9 <- nrow(df[df$Age=="0-17" & df$Gender=="Male",]),
-           count10 <- nrow(df[df$Age=="0-17" & df$Gender=="Female",]))
-
-df_gen <- data.frame(Age=c(rep("18-25",2),rep("26-35",2),rep("36-45",2),rep("45 above",2),rep("0-17",2)),
-                     Gender = rep(c("Male","Female"),5),Count = count)
-ggplot(data=df_gen,aes(x=Age,fill=Gender,y=Count))+geom_bar(position="dodge",stat="identity",size=0.8)+
-  labs(y="Count",x="Age intervals",title="Dissection of the data in Age intervals",subtitle="Gender wise")
-
-
-##Living_area wrt Gender and Age using multiple bar chart 
 
 df1 <- df[df$Age=="18-25",]
 df2 <- df1[df1$Gender=="Male",]
@@ -165,9 +147,57 @@ bar_data <- data.frame(Age =c(rep("18-25",6),rep("26-35",4),rep("36-45",4),rep("
                        value=c(tab1$Freq,tab2$Freq,tab3$Freq,tab4$Freq,tab5$Freq,tab6$Freq,tab7$Freq,tab8$Freq,tab10$Freq)) 
 
 bar_data
-ggplot(data=bar_data,aes(x=Age,fill=Living_area,y=value))+geom_bar(position="dodge",stat="identity",size=0.8)+facet_wrap(~Gender)+
-  labs(y="Count",x="Age intervals",title="Gender wise Living_area data",
+ggplot(data=bar_data,aes(x=Age,fill=Living_area,y=value))+
+  geom_bar(position="dodge",stat="identity",size=0.8)+facet_wrap(~Gender)+
+  labs(y="Number",x="Age intervals",title="Gender wise Living area data",
        subtitle="Age interval wise
 1 denotes Metropolitan cities
 2 denotes Rural area
 3 denotes Small towns")
+
+#FREQUENCY-WISE analysis wrt to Age, Vaccination status and gender.
+agestatus <- data.frame(data$Age, data$Vac_status, data$Gender)
+tabage <- data.frame(table (agestatus))
+colnames(tabage)<- c("Age","Vaccination_Status","Gender","Number")
+agestatus1 <- split(tabage,tabage$Gender)
+agestatus_male <- agestatus1$Male
+agestatus_female <- agestatus1$Female
+
+age_count <- data %>% 
+  group_by(Age,Gender) %>% 
+  summarise(count=n())
+age_count
+age_count_M <- age_count[age_count$Gender=="Male",]
+age_counttemp <- data.frame(Age="0-17",Gender="Male",count= 0)
+age_count_M <- rbind (age_counttemp,age_count_M)
+age_count_M1 <- rep(age_count_M$count,3)
+
+age_count_F <- age_count[age_count$Gender=="Female",]
+age_count_F1 <- rep(age_count_F$count,3)
+
+agestatus_male$freq <- agestatus_male$Number/age_count_M1
+agestatus_male$freq <- replace (agestatus_male$freq,c(1,6,11),0)
+agestatus_female$freq <- agestatus_female$Number/age_count_F1
+agestatus_gender <- rbind(agestatus_male,agestatus_female)
+
+
+ggplot(data=agestatus_gender,aes(x= Age,y= freq,fill= Vaccination_Status))+
+  geom_bar(position="dodge",stat="identity",size=0.8)+ facet_wrap(~Gender)+
+  labs(y="Number",x="Age Groups",title="Gender wise Vaccination status data",
+       subtitle="1 represents First dose is taken 
+2 denotes Both dose is taken
+3 denotes Not Vaccinated")
+
+
+data2 <- df
+living <- data2 %>% 
+  group_by(Living_area,Vac_status) %>% 
+  summarise (total= n())
+living$Vac_status= as.integer(living$Vac_status)
+ggplot(data=living,aes(x= Living_area,y= as.factor (total),fill= Vac_status))+
+  geom_bar(position="dodge",stat="identity",size=0.8)+
+  labs(y="Number",x="Age Groups",title="Gender wise Vaccination status data",
+       subtitle="1 represents First dose is taken 
+2 denotes Both dose is taken
+3 denotes Not Vaccinated")
+
