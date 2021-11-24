@@ -157,6 +157,7 @@ ggplot(data=bar_data,aes(x=Age,fill=Living_area,y=value))+
 
 
 
+
 ## EXPLORATORY DATA ANALYSIS
 ## 1.Vaccination safe wrt age
 age_count <- data %>% 
@@ -167,26 +168,29 @@ age_safe <- data %>%
   group_by(Age,Vac_safe) %>%
   summarise(count=n())
 age_safe
-age_safe$tot_count <- rep(rep(age_count$count,times=c(1,3,2,2,2)))  
+tab1 <- data.frame(table(age_safe$Age))
+age_safe$tot_count <- rep(rep(age_count$count,times=tab1$Freq))  
 age_safe$freq_den <- age_safe$count/age_safe$tot_count
-age_safe <- age_safe[-1,]
-ggplot(data=age_safe,aes(x=Age,y=freq_den,fill=as.factor(Vac_safe)),beside=TRUE)+geom_bar(position="dodge",stat="identity")+
-  labs(title="Vaccination reliability age wise",subtitle="  1 represents No, it can affect my health 
+ggplot(data=age_safe,aes(x=Age,y=freq_den,fill=as.factor(Vac_safe)),beside=TRUE)+geom_bar(position="dodge",stat="identity",width=0.5)+
+  labs(title="Reliability on Vaccination",subtitle="  1 represents No, it can affect my health 
   2 represents Not Sure 
-  3 is Yes",x="Age intervals",y="Frequency density")
+  3 is Yes",x="Age intervals",y="Frequency density",fill="Reliability on vaccine")
 
 ## 2. Vaccination safe wrt living area
+
 living_count <- df%>%
   group_by(Living_area) %>% 
   summarise(count=n())
 living_safe <- df %>% 
   group_by(Living_area,Vac_safe) %>% 
   summarise(count=n())  
-living_safe$count_tot <- rep(living_count$count,times=c(3,1,3))  
+living_safe
+tab2 <- data.frame(table(living_safe$Living_area))
+living_safe$count_tot <- rep(living_count$count,times=tab2$Freq)  
 living_safe$freq_den <- living_safe$count/living_safe$count_tot
 ggplot(data=living_safe,aes(x=as.factor(Living_area),y=freq_den,fill=as.factor(Vac_safe)))+
   geom_bar(position="dodge",stat="identity",width = 0.3)+
-  labs(title="Vaccination reliability",x="Living areas",y="Frequency density",subtitle="Living area wise")+
+  labs(title="Reliability on Vaccination",x="Living areas",y="Frequency density",subtitle="Living area wise",fill="Reliability on vaccine")+
   theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0))+coord_flip()
 
 ## 3. Vaccination safe wrt Gender
@@ -196,15 +200,15 @@ gen_count <- df %>%
 gen_safe <- df %>% 
   group_by(Gender,Vac_safe) %>% 
   summarise(count=n())
-gen_safe
-gen_safe$count_tot <- rep(gen_count$count,times=c(3,3))  
+tab3 <- data.frame(table(gen_safe$Gender))
+gen_safe$count_tot <- rep(gen_count$count,times=tab3$Freq)  
 gen_safe$freq_den <- gen_safe$count/gen_safe$count_tot
 ggplot(data=gen_safe,aes(x=as.factor(Gender),y=freq_den,fill=as.factor(Vac_safe)))+
   geom_bar(position="dodge",stat="identity",width=0.3)+
-  labs(title="Vaccination reliability",x="Gender",y="Frequency density",subtitle="Gender wise")+
+  labs(title="Reliability on Vaccination",x="Gender",y="Frequency density",subtitle="Gender wise",fill="Reliability on vaccine")+
   coord_flip()
 
-#4. FREQUENCY-WISE analysis wrt to Age, Vaccination status and gender.
+#4. FREQUENCY-density analysis of Vaccination status wrt  Age and gender
 agestatus <- data.frame(data$Age, data$Vac_status, data$Gender)
 tabage <- data.frame(table (agestatus))
 colnames(tabage)<- c("Age","Vaccination_Status","Gender","Number")
@@ -232,21 +236,20 @@ agestatus_gender <- rbind(agestatus_male,agestatus_female)
 
 ggplot(data=agestatus_gender,aes(x= Age,y= freq,fill= Vaccination_Status))+
   geom_bar(position="dodge",stat="identity",size=0.8)+ facet_wrap(~Gender)+
-  labs(y="Number",x="Age Groups",title="Gender wise Vaccination status data",
-       subtitle="1 represents First dose is taken 
+  labs(y="Frequency density",x="Age Groups",title="Vaccination status data", subtitle="Gender wise
+1 represents First dose is taken 
 2 denotes Both dose is taken
 3 denotes Not Vaccinated")
 
-#5. relationship between vaccination status and living area of the indivisual.
+#5. Living area vs vaccination status
 data2 <- df
 living <- data2 %>% 
-  group_by(Living_area,Vac_status) %>% 
-  summarise (total= n())
-living$Vac_status= as.integer(living$Vac_status)
-ggplot(data=living,aes(x= Living_area,y= as.factor (total),fill= Vac_status))+
-  geom_bar(position="dodge",stat="identity",size=0.8)+
-  labs(y="Number",x="Age Groups",title="Gender wise Vaccination status data",
-       subtitle="1 represents First dose is taken 
-2 denotes Both dose is taken
-3 denotes Not Vaccinated")
+  group_by(Vac_status,Living_area) %>% 
+  summarise (count= n())
+living$freq_den <- living$count/living_count$count
+tab4<- data.frame(table(living$Living_area))
+ggplot(data=living,aes(x= Living_area,y= freq_den,fill= Vac_status))+
+  geom_bar(position="dodge",stat="identity",size=0.8,width=0.3)+
+  labs(y="Frequency density",x="Living area",title="Vaccination status",subtitle="Living area wise")+ coord_flip()
+
 
