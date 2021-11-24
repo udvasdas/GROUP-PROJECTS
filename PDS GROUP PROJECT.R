@@ -253,3 +253,25 @@ ggplot(data=living,aes(x= Living_area,y= freq_den,fill= Vac_status))+
   labs(y="Frequency density",x="Living area",title="Vaccination status",subtitle="Living area wise")+ coord_flip()
 
 
+#6. Reliability on vaccine provider vs Living area 
+living1 <- df %>% 
+  group_by(Vac_reliable,Living_area) %>% 
+  summarise (total= n())
+living1
+living1$freq_density <- living1$total/living_count$count
+
+ggplot(data=living1,aes(x= Living_area,y= freq_density,fill= Vac_reliable))+
+  geom_bar(position="dodge",stat="identity",width =0.4)+ coord_flip()+
+  labs(y="Frequency",x="Living Area",title="Reliability on vaccine provider",
+       fill= "Vaccine Provider", subtitle = "Living area wise")
+
+#7. Drawing an inference from the data about vaccine reliability by plotting the 
+# travel area and the living area
+avail <- df %>% 
+  group_by(Travel,Living_area) %>% 
+  summarise (count= n())
+avail$freq_density <- avail$count/living_count$count 
+ggplot(data=avail,aes(x= Living_area,y= avail$freq_density,fill= Travel))+
+  geom_bar(position="dodge",stat="identity",width =0.4)+
+  labs(y="Frequency density",x="Living Area",title="Travel to get the vaccine",
+       fill= "Travel to get the vaccine", subtitle = "Living area wise")
