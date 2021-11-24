@@ -176,7 +176,6 @@ ggplot(data=age_safe,aes(x=Age,y=freq_den,fill=as.factor(Vac_safe)),beside=TRUE)
   3 is Yes",x="Age intervals",y="Frequency density")
 
 ## 2. Vaccination safe wrt living area
-
 living_count <- df%>%
   group_by(Living_area) %>% 
   summarise(count=n())
@@ -204,6 +203,7 @@ ggplot(data=gen_safe,aes(x=as.factor(Gender),y=freq_den,fill=as.factor(Vac_safe)
   geom_bar(position="dodge",stat="identity",width=0.3)+
   labs(title="Vaccination reliability",x="Gender",y="Frequency density",subtitle="Gender wise")+
   coord_flip()
+
 #4. FREQUENCY-WISE analysis wrt to Age, Vaccination status and gender.
 agestatus <- data.frame(data$Age, data$Vac_status, data$Gender)
 tabage <- data.frame(table (agestatus))
