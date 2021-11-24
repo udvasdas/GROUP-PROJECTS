@@ -262,7 +262,7 @@ living1$freq_density <- living1$total/living_count$count
 
 ggplot(data=living1,aes(x= Living_area,y= freq_density,fill= Vac_reliable))+
   geom_bar(position="dodge",stat="identity",width =0.4)+ coord_flip()+
-  labs(y="Frequency",x="Living Area",title="Reliability on vaccine provider",
+  labs(y="Frequency density",x="Living Area",title="Reliability on vaccine provider",
        fill= "Vaccine Provider", subtitle = "Living area wise")
 
 #7. Drawing an inference from the data about vaccine reliability by plotting the 
