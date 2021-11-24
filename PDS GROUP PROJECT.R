@@ -176,8 +176,8 @@ ggplot(data=age_safe,aes(x=Age,y=freq_den,fill=as.factor(Vac_safe)),beside=TRUE)
   2 represents Not Sure 
   3 is Yes",x="Age intervals",y="Frequency density",fill="Reliability on vaccine")
 
-## 2. Vaccination safe wrt living area
 
+## 2. Vaccination safe wrt living area
 living_count <- df%>%
   group_by(Living_area) %>% 
   summarise(count=n())
