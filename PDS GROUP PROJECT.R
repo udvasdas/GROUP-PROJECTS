@@ -265,8 +265,8 @@ ggplot(data=living1,aes(x= Living_area,y= freq_density,fill= Vac_reliable))+
   labs(y="Frequency density",x="Living Area",title="Reliability on vaccine provider",
        fill= "Vaccine Provider", subtitle = "Living area wise")
 
-#7. Drawing an inference from the data about vaccine reliability by plotting the 
-# travel area and the living area
+#7. Drawing an inference from the data about vaccine availability by plotting the 
+# travel and the living area
 avail <- df %>% 
   group_by(Travel,Living_area) %>% 
   summarise (count= n())
