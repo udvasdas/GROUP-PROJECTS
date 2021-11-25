@@ -277,25 +277,20 @@ ggplot(data=avail,aes(x= Living_area,y= avail$freq_density,fill= Travel))+
   labs(y="Frequency density",x="Living Area",title="Travel to get the vaccine",
        fill= "Travel to get the vaccine", subtitle = "Living area wise")
 
-#8. age wise vaccine symptoms.
+## age wise vaccine symptoms.
 symp <- dataog %>%
-  group_by(Vac_symptom,Age) %>% 
+  group_by(Age,Vac_symptom) %>% 
   summarise(count = n())
-symp
-ggplot(data=symp ,aes(x= Age,y= count ,fill= Vac_symptom ))+
-  geom_bar(position="dodge",stat="identity",width =0.4)+
+age_count <- data %>% 
+  group_by(Age) %>% 
+  summarise(count=n())
+tab5 <- data.frame(table(symp$Age))
+symp$freq_tot <- rep(age_count$count,times=tab5$Freq) 
+symp$freq_den <- symp$count/symp$freq_tot
+ggplot(data=symp ,aes(x= Age,y= freq_den ,fill= Vac_symptom ))+
+  geom_bar(position="dodge",stat="identity",width =0.3)+
   labs(y="Count",x="Age group",title="Vaccine symptoms",
-       fill= "Vaccine symptoms", subtitle = "Age wise")
+       fill= "Vaccine symptoms", subtitle = "Age wise",fill="Frequency density")
 
 
 
-## living area vs paid and free vaccines
-living_paid <- dataog %>%
-  group_by(Vac_reliable,Living_area) %>% 
-  summarise (count= n())
-living_paid
-living_paid$freq_density <- living_paid$count/living_count$count
-ggplot(data=living_paid ,aes(x= Living_area,y= freq_density ,fill= Vac_reliable ))+
-  geom_bar(position="dodge",stat="identity",width =0.4)+
-  labs(y="Frequency density",x="living area",title="Vaccine reliability",
-       fill= "Vaccine providing body", subtitle = "Living area wise")
