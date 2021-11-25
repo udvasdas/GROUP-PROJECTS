@@ -1,8 +1,8 @@
 ## CALLING THE DATA
 
 rm(list=ls())
-df <- read.csv(file = "Vaccination.csv",header = TRUE)
-head(df)
+dataog <- read.csv(file = "Vaccination.csv",header = TRUE)
+head(dataog)
 
 ## CALLING THE LIBRARIES
 library(dplyr)
@@ -11,12 +11,12 @@ library(ggplot2)
 ##PREPARING THE DATA TO ANALYZE
 ## Columns to be modified--- Living area, Vac_safe, Vac_status, Vac_reliable, CoWin, Vac_symptom   
 ## Changing the column names to something short for future use.
-colnames(df) <- c("TimeStamp","Age","Gender","Living_area","Vac_safe","Vac_status","Travel","1st_choice",
+colnames(dataog) <- c("TimeStamp","Age","Gender","Living_area","Vac_safe","Vac_status","Travel","1st_choice",
                     "2nd_choice","3rd_choice","4th_choice","5th_choice","6th_choice","Vac_brand",
                     "Vac_reliable","CoWin","Vac_app_easy","waiting_time","Social_dis","Hygiene",
                     "Vac_symptom","Govt_effort")
 
-data <- df
+data <- dataog
 data$Living_area <- as.numeric(as.factor(data$Living_area))
 table (data$Living_area) 
 ##here we are using to represent the entire column "Living_area" as a factor of (1,2,3)
@@ -156,8 +156,6 @@ ggplot(data=bar_data,aes(x=Age,fill=Living_area,y=value))+
 3 denotes Small towns")
 
 
-
-
 ## EXPLORATORY DATA ANALYSIS
 ## 1.Vaccination safe wrt age
 age_count <- data %>% 
@@ -178,10 +176,10 @@ ggplot(data=age_safe,aes(x=Age,y=freq_den,fill=as.factor(Vac_safe)),beside=TRUE)
 
 
 ## 2. Vaccination safe wrt living area
-living_count <- df%>%
+living_count <- dataog%>%
   group_by(Living_area) %>% 
   summarise(count=n())
-living_safe <- df %>% 
+living_safe <- dataog %>% 
   group_by(Living_area,Vac_safe) %>% 
   summarise(count=n())  
 living_safe
@@ -193,11 +191,12 @@ ggplot(data=living_safe,aes(x=as.factor(Living_area),y=freq_den,fill=as.factor(V
   labs(title="Reliability on Vaccination",x="Living areas",y="Frequency density",subtitle="Living area wise",fill="Reliability on vaccine")+
   theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0))+coord_flip()
 
+
 ## 3. Vaccination safe wrt Gender
-gen_count <- df %>%
+gen_count <- dataog %>%
   group_by(Gender) %>% 
   summarise(count=n())
-gen_safe <- df %>% 
+gen_safe <- dataog %>% 
   group_by(Gender,Vac_safe) %>% 
   summarise(count=n())
 tab3 <- data.frame(table(gen_safe$Gender))
@@ -207,6 +206,7 @@ ggplot(data=gen_safe,aes(x=as.factor(Gender),y=freq_den,fill=as.factor(Vac_safe)
   geom_bar(position="dodge",stat="identity",width=0.3)+
   labs(title="Reliability on Vaccination",x="Gender",y="Frequency density",subtitle="Gender wise",fill="Reliability on vaccine")+
   coord_flip()
+
 
 #4. FREQUENCY-density analysis of Vaccination status wrt  Age and gender
 agestatus <- data.frame(data$Age, data$Vac_status, data$Gender)
@@ -241,8 +241,9 @@ ggplot(data=agestatus_gender,aes(x= Age,y= freq,fill= Vaccination_Status))+
 2 denotes Both dose is taken
 3 denotes Not Vaccinated")
 
+
 #5. Living area vs vaccination status
-data2 <- df
+data2 <- dataog
 living <- data2 %>% 
   group_by(Vac_status,Living_area) %>% 
   summarise (count= n())
@@ -254,7 +255,7 @@ ggplot(data=living,aes(x= Living_area,y= freq_den,fill= Vac_status))+
 
 
 #6. Reliability on vaccine provider vs Living area 
-living1 <- df %>% 
+living1 <- dataog %>% 
   group_by(Vac_reliable,Living_area) %>% 
   summarise (total= n())
 living1
@@ -262,12 +263,12 @@ living1$freq_density <- living1$total/living_count$count
 
 ggplot(data=living1,aes(x= Living_area,y= freq_density,fill= Vac_reliable))+
   geom_bar(position="dodge",stat="identity",width =0.4)+ coord_flip()+
-  labs(y="Frequency density",x="Living Area",title="Reliability on vaccine provider",
+  labs(y="Frequency",x="Living Area",title="Reliability on vaccine provider",
        fill= "Vaccine Provider", subtitle = "Living area wise")
 
 #7. Drawing an inference from the data about vaccine availability by plotting the 
-# travel and the living area
-avail <- df %>% 
+# travel area and the living area
+avail <- dataog %>% 
   group_by(Travel,Living_area) %>% 
   summarise (count= n())
 avail$freq_density <- avail$count/living_count$count 
@@ -275,3 +276,26 @@ ggplot(data=avail,aes(x= Living_area,y= avail$freq_density,fill= Travel))+
   geom_bar(position="dodge",stat="identity",width =0.4)+
   labs(y="Frequency density",x="Living Area",title="Travel to get the vaccine",
        fill= "Travel to get the vaccine", subtitle = "Living area wise")
+
+#8. age wise vaccine symptoms.
+symp <- dataog %>%
+  group_by(Vac_symptom,Age) %>% 
+  summarise(count = n())
+symp
+ggplot(data=symp ,aes(x= Age,y= count ,fill= Vac_symptom ))+
+  geom_bar(position="dodge",stat="identity",width =0.4)+
+  labs(y="Count",x="Age group",title="Vaccine symptoms",
+       fill= "Vaccine symptoms", subtitle = "Age wise")
+
+
+
+## living area vs paid and free vaccines
+living_paid <- dataog %>%
+  group_by(Vac_reliable,Living_area) %>% 
+  summarise (count= n())
+living_paid
+living_paid$freq_density <- living_paid$count/living_count$count
+ggplot(data=living_paid ,aes(x= Living_area,y= freq_density ,fill= Vac_reliable ))+
+  geom_bar(position="dodge",stat="identity",width =0.4)+
+  labs(y="Frequency density",x="living area",title="Vaccine reliability",
+       fill= "Vaccine providing body", subtitle = "Living area wise")
