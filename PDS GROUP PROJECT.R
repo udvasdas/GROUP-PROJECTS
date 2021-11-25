@@ -318,4 +318,54 @@ ggplot(data=cowin_living ,aes(x= Living_area,y= freq_density,fill= CoWin))+
   labs(y="Frequency density",x="Living area",title="Cowin usage",
        fill= "Cowin usage", subtitle = "Living area wise")
 
+#10. CoWin use >> vaccination appointment ease
+
+f <- function(x)
+{
+  if(x==1)
+    return("No")
+  else
+    return("Yes")
+}
+cowin_data <- data %>% 
+  select(CoWin,Vac_app_easy)
+  
+cowin_data$CoWin <- sapply(cowin_data$CoWin,f)
+cowin_data1 <- cowin_data %>% 
+  group_by(Vac_app_easy,CoWin) %>% 
+  summarise(count=n())
+cowin_data1
+
+tab6 <- data.frame(table(cowin_data$CoWin))
+cowin_data1$tot <- rep(tab6$Freq,times=5)
+cowin_data1$freq_den <- cowin_data1$count/cowin_data1$tot
+
+ggplot(data=cowin_data1,aes(x= CoWin,y= freq_den,fill= as.factor(Vac_app_easy)))+
+  geom_bar(position="dodge",stat="identity",width =0.4)+
+  labs(y="Frequency density",x="CoWin portal used",title="Using CoWin portal vs ease in getting an appointment",
+       fill= "", subtitle = "1 signifies least difficulty 
+5 signifies maximum difficulty
+(Data is in 1-5 likert scale)")
+
+
+
+
+
+
+
+## age wise vaccine symptoms.
+symp <- dataog %>%
+  group_by(Age,Vac_symptom) %>% 
+  summarise(count = n())
+age_count <- data %>% 
+  group_by(Age) %>% 
+  summarise(count=n())
+tab5 <- data.frame(table(symp$Age))
+symp$freq_tot <- rep(age_count$count,times=tab5$Freq) 
+symp$freq_den <- symp$count/symp$freq_tot
+ggplot(data=symp ,aes(x= Age,y= freq_den ,fill= Vac_symptom ))+
+  geom_bar(position="dodge",stat="identity",width =0.3)+
+  labs(y="Count",x="Age group",title="Vaccine symptoms",
+       fill= "Vaccine symptoms", subtitle = "Age wise",fill="Frequency density")
+
 
