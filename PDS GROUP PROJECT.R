@@ -293,4 +293,29 @@ ggplot(data=symp ,aes(x= Age,y= freq_den ,fill= Vac_symptom ))+
        fill= "Vaccine symptoms", subtitle = "Age wise",fill="Frequency density")
 
 
+##8. Cowin vs Age
+cowin_age <- dataog %>%
+  group_by(Age,CoWin) %>% 
+  summarise(count = n())
+colnames(cowin_age) <- c("Age","Cowin","Count")
+tab6 <- data.frame(table (cowin_age$Age))
+cowin_age$freq <- rep(age_count$count,times=tab6$Freq)
+cowin_age$freq_density <- cowin_age$Count/cowin_age$freq
+
+ggplot(data=cowin_age ,aes(x= Age,y= freq_density,fill= Cowin))+
+  geom_bar(position="dodge",stat="identity",width =0.4)+
+  labs(y="Frequency density",x="Age group",title="Cowin usage",
+       fill= "Cowin usage", subtitle = "Age wise")
+
+##9. Cowin vs living area
+cowin_living <- dataog %>%
+  group_by(CoWin,Living_area) %>% 
+  summarise(count = n())
+cowin_living$freq_density <- cowin_living$count/living_count$count
+
+ggplot(data=cowin_living ,aes(x= Living_area,y= freq_density,fill= CoWin))+
+  geom_bar(position="dodge",stat="identity",width =0.4)+
+  labs(y="Frequency density",x="Living area",title="Cowin usage",
+       fill= "Cowin usage", subtitle = "Living area wise")
+
 
