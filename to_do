@@ -19,7 +19,7 @@ visualisation
 3.vaccination safe >> gender wise- same (udvas done)
 4.vaccination status >> age wise+ gender wise (Nilabja done)
 5.vaccination status >> living area (Nilabja done)
-6.vaccination reliability >> area of living (Nilabja done)
+6.Reliability on vaccine provider >> area of living (Nilabja done)
 7.vaccine availability>> travel+living area (Nilabja done)
 8.CoWin vs Age (done)
 9. Cowin vs living area (done)
@@ -29,14 +29,12 @@ visualisation
 agewise >>symptoms (Nilabja done)
 vaccine brand >> symptoms
 multiple bar plot for choices of vaccines 
-cowin>> age
-cowin>> living area
-cowin(yes and no)>> appointment ease
 waiting time >> travel== no
-paid vaccine >> area of living
-paid vacccine vs government  >> social distancing+ hygine + waiting time 
+Hygiene >> travel== no
+Social distancing >> travel== no
+waiting time >> travel== no
 
-
+This is a downfall---paid vacccine vs government  >> social distancing+ hygine + waiting time 
 
 
 Relationships to be calculated-
