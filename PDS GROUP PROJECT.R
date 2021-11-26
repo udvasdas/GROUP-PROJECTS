@@ -347,8 +347,20 @@ ggplot(data=cowin_data1,aes(x= CoWin,y= freq_den,fill= as.factor(Vac_app_easy)))
 5 signifies maximum difficulty
 (Data is in 1-5 likert scale)")
 
-
-
+##11.
+##12. Symptoms after vaccination>>vaccine brand wise
+vac_data <- dataog %>% 
+  group_by(Vac_brand,Vac_symptom)%>%
+  summarise(count=n())
+vac_data <- vac_data[-9,]
+brand_count <- data.frame(table(dataog$Vac_brand))
+brand_count <- brand_count[-3,]
+vac_data$tot <- rep(brand_count$Freq,each=4)
+vac_data$Freq_den <- vac_data$count/vac_data$tot 
+ggplot(data=vac_data,aes(x= Vac_brand,y= Freq_den,fill= as.factor(Vac_symptom)))+
+  geom_bar(position="dodge",stat="identity",width =0.4)+
+  labs(y="Frequency density",x="Vaccine brands",title="Symptoms after vaccination",
+      subtitle = "Vaccine brand wise",fill= "Symptoms")+coord_flip() 
 
 
 
