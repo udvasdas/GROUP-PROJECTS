@@ -377,7 +377,24 @@ ggplot(data=vac_data,aes(x= Vac_brand,y= Freq_den,fill= as.factor(Vac_symptom)))
   labs(y="Frequency density",x="Vaccine brands",title="Symptoms after vaccination",
       subtitle = "Vaccine brand wise",fill= "Symptoms")+coord_flip() 
 
-##13.
+
+##13. waiting time vs Living area for who has not traveled
+travel_no <- dataog[dataog$Travel== "No",]
+waiting <- travel_no %>% 
+  group_by(Living_area,waiting_time) %>% 
+  summarise(count= n())
+living_count_no <- travel_no %>% 
+  group_by(Living_area) %>% 
+  summarise(count=n())
+waiting$freq_density <- waiting$count/living_count_no$count
+ggplot(data=waiting,aes(x= Living_area,y= freq_density,fill= waiting_time))+
+  geom_bar(position="dodge",stat="identity",width =0.4)+
+  labs(y="Frequency density",x="Living area",
+       title="Waiting time in queue",
+       fill= "", subtitle ="Living area-wise" )
+
+
+
 ##14. Hygiene vs Living area for who has not traveled
 travel_no <- dataog[dataog$Travel=="No",]
 hygiene <- travel_no %>% 
