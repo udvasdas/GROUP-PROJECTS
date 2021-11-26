@@ -364,7 +364,7 @@ cowinpie2 <- Cowinbar2 + coord_polar("y", start = 0)
 cowinpie1 + geom_text(label= c(""),position=position_stack(vjust = 0.5))
 cowinpie2 + geom_text(label= c(""),position=position_stack(vjust = 0.5))
 
-
+##12. Visualisation of Vaccine choices of the subjects
 
 ##13. Symptoms after vaccination>>vaccine brand wise
 vac_data <- dataog %>% 
@@ -416,6 +416,7 @@ ggplot(data=hygiene,aes(x= Living_area,y= Freq_den,fill= as.factor(Hygiene)))+
 5 denotes best hygiene maintenance",
        fill= "Hygiene level")+coord_flip()
 
+
 ## 16. Social distancing vs living area
 distancing <- travel_no %>% 
   group_by(Living_area,Social_dis) %>% 
@@ -432,15 +433,11 @@ ggplot(data=distancing,aes(x= Living_area,y= freq_density,fill= as.factor(Social
 5 denotes adequate social distancing" )
 
 
-
-
-
-
-## age wise vaccine symptoms.
+##17.age wise vaccine symptoms.
 symp <- dataog %>%
   group_by(Age,Vac_symptom) %>% 
   summarise(count = n())
-age_count <- data %>% 
+age_count <- dataog %>% 
   group_by(Age) %>% 
   summarise(count=n())
 tab5 <- data.frame(table(symp$Age))
@@ -448,7 +445,42 @@ symp$freq_tot <- rep(age_count$count,times=tab5$Freq)
 symp$freq_den <- symp$count/symp$freq_tot
 ggplot(data=symp ,aes(x= Age,y= freq_den ,fill= Vac_symptom ))+
   geom_bar(position="dodge",stat="identity",width =0.3)+
+  labs(y="Frequency density",x="Age group",title="Vaccine symptoms",
+       fill= "Vaccine symptoms", subtitle = "Age wise")
+
+
+##18. age and gender wise vaccine symptoms.
+gen <- split(dataog,data$Gender)
+gen_male <- gen$Male
+gen_female <- gen$Female
+
+male_count <- gen_male %>% 
+  group_by(Age) %>% 
+  summarise(count=n())
+
+female_count <- gen_female %>% 
+  group_by(Age) %>% 
+  summarise(count=n())
+
+symp_male <- gen_male %>% 
+  group_by(Age,Gender,Vac_symptom) %>% 
+  summarise(count=n())
+tab17 <- data.frame(table(symp_male$Age))
+symp_male$tot <- rep(male_count$count,times=tab17$Freq)
+symp_male$freq_den <- symp_male$count/symp_male$tot
+
+symp_female <- gen_female %>% 
+  group_by(Age,Gender,Vac_symptom) %>% 
+  summarise(count=n())
+tab18 <- data.frame(table(symp_female$Age))
+symp_female$tot <- rep(female_count$count,times=tab18$Freq)
+symp_female$freq_den <- symp_female$count/symp_female$tot
+
+symp1 <- rbind(symp_male,symp_female)
+
+ggplot(data=symp1 ,aes(x= Age,y= freq_den ,fill= as.factor(Vac_symptom)))+
+  geom_bar(position="dodge",stat="identity",width =0.3)+ facet_wrap(~Gender)+
   labs(y="Count",x="Age group",title="Vaccine symptoms",
-       fill= "Vaccine symptoms", subtitle = "Age wise",fill="Frequency density")
+       fill= "Vaccine symptoms", subtitle = "Age and Gender wise")
 
 
