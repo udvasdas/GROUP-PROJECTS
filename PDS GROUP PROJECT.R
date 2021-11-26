@@ -362,7 +362,20 @@ ggplot(data=vac_data,aes(x= Vac_brand,y= Freq_den,fill= as.factor(Vac_symptom)))
   labs(y="Frequency density",x="Vaccine brands",title="Symptoms after vaccination",
       subtitle = "Vaccine brand wise",fill= "Symptoms")+coord_flip() 
 
-
+##13. Waiting time vs Living area for who has not traveled
+travel_no <- dataog[dataog$Travel=="No",]
+hygiene <- travel_no %>% 
+  group_by(Living_area,Hygiene) %>% 
+  summarise(count=n())
+hygiene$tot <- rep(living_count$count,each=5)
+hygiene$Freq_den <- hygiene$count/hygiene$tot
+ggplot(data=hygiene,aes(x= Living_area,y= Freq_den,fill= as.factor(Hygiene)))+
+  geom_bar(position="dodge",stat="identity",width =0.3)+
+  labs(y="Frequency density",x="Living area",title="Hygiene maintenance",
+       subtitle = "Vaccination place wise
+1 denotes poorest hygiene maintenance
+5 denotes best hygiene maintenance",
+       fill= "Hygiene level")+coord_flip()
 
 
 ## age wise vaccine symptoms.
