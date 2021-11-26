@@ -347,7 +347,22 @@ ggplot(data=cowin_data1,aes(x= CoWin,y= freq_den,fill= as.factor(Vac_app_easy)))
 5 signifies maximum difficulty
 (Data is in 1-5 likert scale)")
 
-##11.
+
+## 11. pie diagram of cowin usage
+Cowinbar1 <- ggplot (cowin_data1, aes(y = count ,x = "", fill= CoWin))+geom_bar(stat = "identity", width = 0.5)+
+  labs(title = "Percentage of Cowin usage", x= "", y= "")
+cowinpie1 <- Cowinbar+ coord_polar("y", start = 0)
+
+cowinyes <- dataog[dataog$CoWin== "Yes, I faced a lot of issues while booking"| dataog$CoWin== "Yes, but I did not face any problem",]
+cowinyes <- cowinyes %>% 
+  group_by(CoWin) %>% 
+  summarise(count = n())
+
+Cowinbar2 <- ggplot (cowinyes, aes(y = count ,x = "", fill= CoWin))+geom_bar(stat = "identity", width = 0.5)+
+  labs(title = "Problem faced while using Cowin", x= "", y= "")
+cowinpie2 <- Cowinbar2 + coord_polar("y", start = 0)
+cowinpie1 + geom_text(label= c(""),position=position_stack(vjust = 0.5))
+cowinpie2 + geom_text(label= c(""),position=position_stack(vjust = 0.5))
 ##12. Symptoms after vaccination>>vaccine brand wise
 vac_data <- dataog %>% 
   group_by(Vac_brand,Vac_symptom)%>%
