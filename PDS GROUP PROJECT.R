@@ -363,7 +363,10 @@ Cowinbar2 <- ggplot (cowinyes, aes(y = count ,x = "", fill= CoWin))+geom_bar(sta
 cowinpie2 <- Cowinbar2 + coord_polar("y", start = 0)
 cowinpie1 + geom_text(label= c(""),position=position_stack(vjust = 0.5))
 cowinpie2 + geom_text(label= c(""),position=position_stack(vjust = 0.5))
-##12. Symptoms after vaccination>>vaccine brand wise
+
+
+
+##13. Symptoms after vaccination>>vaccine brand wise
 vac_data <- dataog %>% 
   group_by(Vac_brand,Vac_symptom)%>%
   summarise(count=n())
@@ -378,7 +381,7 @@ ggplot(data=vac_data,aes(x= Vac_brand,y= Freq_den,fill= as.factor(Vac_symptom)))
       subtitle = "Vaccine brand wise",fill= "Symptoms")+coord_flip() 
 
 
-##13. waiting time vs Living area for who has not traveled
+##14. waiting time vs Living area for who has not traveled
 travel_no <- dataog[dataog$Travel== "No",]
 waiting <- travel_no %>% 
   group_by(Living_area,waiting_time) %>% 
@@ -395,7 +398,7 @@ ggplot(data=waiting,aes(x= Living_area,y= freq_density,fill= waiting_time))+
 
 
 
-##14. Hygiene vs Living area for who has not traveled
+##15. Hygiene vs Living area for who has not traveled
 travel_no <- dataog[dataog$Travel=="No",]
 hygiene <- travel_no %>% 
   group_by(Living_area,Hygiene) %>% 
@@ -412,6 +415,23 @@ ggplot(data=hygiene,aes(x= Living_area,y= Freq_den,fill= as.factor(Hygiene)))+
 1 denotes poorest hygiene maintenance
 5 denotes best hygiene maintenance",
        fill= "Hygiene level")+coord_flip()
+
+## 16. Social distancing vs living area
+distancing <- travel_no %>% 
+  group_by(Living_area,Social_dis) %>% 
+  summarise(count=n())
+tab16 <- data.frame(table (distancing$Living_area))
+distancing$freq <- rep(living_count_no$count,times=tab16$Freq)
+distancing$freq_density <- distancing$count/distancing$freq
+ggplot(data=distancing,aes(x= Living_area,y= freq_density,fill= as.factor(Social_dis)))+
+  geom_bar(position="dodge",stat="identity",width =0.4)+
+  labs(y="Frequency density",x="Living area",
+       title="Social distancing maintained",
+       fill= "Social distancing", subtitle ="Living area-wise
+1 denotes no social distancing
+5 denotes adequate social distancing" )
+
+
 
 
 
