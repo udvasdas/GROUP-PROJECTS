@@ -513,4 +513,17 @@ ggplot(data=symp1 ,aes(x= Age,y= freq_den ,fill= as.factor(Vac_symptom)))+
   labs(y="Count",x="Age group",title="Vaccine symptoms",
        fill= "Vaccine symptoms", subtitle = "Age and Gender wise")
 
+##19. Age-wise categorization of 1st choice vaccines
+age_vaccine <- dataog %>% 
+  group_by(Age,`1st_choice`) %>% 
+  summarise(count= n())
+colnames(age_vaccine) <- c("Age","First_choice","Count")
+tab19 <- data.frame(table (age_vaccine$Age))
+age_vaccine$tot <- rep(age_count$count,times=tab19$Freq)
+age_vaccine$freq_density <- age_vaccine$Count/age_vaccine$tot
+ggplot(data=age_vaccine ,aes(x= Age,y=freq_density ,fill= First_choice ))+
+  geom_bar(position="dodge",stat="identity",width =0.3)+
+  labs(y="Frequency density",x="Age group",title="Vaccine symptoms",
+       fill= "Vaccine symptoms", subtitle = "Age wise")
+PieDonut(age_vaccine, aes(Age, First_choice, count=freq_density), title = "First choice vaccine age wise",showRatioThreshold = F,donutLabelSize = 2)
 
