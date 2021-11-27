@@ -365,6 +365,36 @@ cowinpie1 + geom_text(label= c(""),position=position_stack(vjust = 0.5))
 cowinpie2 + geom_text(label= c(""),position=position_stack(vjust = 0.5))
 
 ##12. Visualisation of Vaccine choices of the subjects
+vaccine1 <- data.frame(table (dataog$`1st_choice`))
+vaccine2 <- data.frame(table (dataog$`2nd_choice`))
+vaccine3 <- data.frame(table (dataog$`3rd_choice`))
+vaccine4 <- data.frame(table (dataog$`4th_choice`))
+vaccine5 <- data.frame(table (dataog$`5th_choice`))
+vaccine6 <- data.frame(table (dataog$`6th_choice`))
+ggplot(data=vaccine1 ,aes(x= Var1,y= Freq ,fill= ))+
+  geom_bar(position="dodge",stat="identity",fill = '#DF536B',col= "#2297E6",width =0.3)+
+  labs(y="Count",x="Vaccine brand",title="#1 Vaccine choice")
+
+ggplot(data=vaccine2 ,aes(x= Var1,y= Freq ,fill= ))+
+  geom_bar(position="dodge",stat="identity",fill = '#DF536B',col= "#2297E6",width =0.3)+
+  labs(y="Count",x="Vaccine brand",title="#2 Vaccine choice")
+
+ggplot(data=vaccine3 ,aes(x= Var1,y= Freq ,fill= ))+
+  geom_bar(position="dodge",stat="identity",fill = '#DF536B',col= "#2297E6",width =0.3)+
+  labs(y="Count",x="Vaccine brand",title="#3 Vaccine choice")
+
+ggplot(data=vaccine4 ,aes(x= Var1,y= Freq ,fill= ))+
+  geom_bar(position="dodge",stat="identity",fill = '#DF536B',col= "#2297E6",width =0.3)+
+  labs(y="Count",x="Vaccine brand",title="#4 Vaccine choice")
+
+ggplot(data=vaccine5 ,aes(x= Var1,y= Freq ,fill= ))+
+  geom_bar(position="dodge",stat="identity",fill = '#DF536B',col= "#2297E6",width =0.3)+
+  labs(y="Count",x="Vaccine brand",title="#5 Vaccine choice")
+
+ggplot(data=vaccine6 ,aes(x= Var1,y= Freq))+
+  geom_bar(position="dodge",stat="identity",fill = '#DF536B',col= "#2297E6",width =0.3)+
+  labs(y="Count",x="Vaccine brand",title="#6 Vaccine choice")
+
 
 ##13. Symptoms after vaccination>>vaccine brand wise
 vac_data <- dataog %>% 
